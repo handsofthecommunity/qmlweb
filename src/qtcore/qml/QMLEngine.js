@@ -94,7 +94,7 @@ QMLEngine = function (element, options) {
         this.basePath = basePath;
         this.ensureFileIsLoadedInQrc(file);
         tree = convertToEngine(qrc[file]);
-        this.loadQMLTree(tree, parentComponent);
+        return this.loadQMLTree(tree, parentComponent);
     }
 
     // parse and construct qml
@@ -120,10 +120,12 @@ QMLEngine = function (element, options) {
         for (var i in this.completedSignals) {
             this.completedSignals[i]();
         }
+
+        return component;
     }
 
     this.rootContext = function() {
-      return doc.$context;
+      return global.qmlEngine.doc.$context;
     }
 
     this.focusedElement = (function() {
@@ -271,7 +273,10 @@ QMLEngine = function (element, options) {
         // Initialize property bindings
         for (var i = 0; i < this.bindedProperties.length; i++) {
             var property = this.bindedProperties[i];
-            property.binding.compile();
+            if (!property) continue;
+            if (property.binding != null) {
+               property.binding.compile();
+            }
             property.update();
         }
         this.bindedProperties = [];
