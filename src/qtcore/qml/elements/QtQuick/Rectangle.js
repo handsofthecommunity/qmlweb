@@ -17,23 +17,36 @@ registerQmlType({
     this.border.width = 1;
 
     this.colorChanged.connect(this, function(newVal) {
-        this.css.backgroundColor = QMLColor(newVal);
+        this.dom.firstChild.style.backgroundColor = QMLColor(newVal);
     });
     this.radiusChanged.connect(this, function(newVal) {
-        this.css.borderRadius = newVal + 'px';
+        this.dom.firstChild.style.borderRadius = newVal + 'px';
     });
     this.border.colorChanged.connect(this, function(newVal) {
-        this.css.borderColor = QMLColor(newVal);
-        this.css.borderWidth = this.border.width + 'px';
+        this.dom.firstChild.style.borderColor = QMLColor(newVal);
+        this.setBorderWidth(newVal);
     });
     this.border.widthChanged.connect(this, function(newVal) {
-        this.css.borderWidth = newVal + 'px';
+        this.setBorderWidth(newVal);
     });
+
+    this.setBorderWidth = function(newVal) {
+        this.dom.firstChild.style.borderWidth = newVal + 'px';
+        this.dom.style.paddingRight = 2*newVal + 'px';
+        this.dom.style.paddingBottom = 2*newVal + 'px';
+    }
+
+    this.dom.innerHTML = "<div></div>"
+    this.dom.firstChild.style.pointerEvents = "none";
+    this.dom.firstChild.style.margin = "0";
+    this.dom.firstChild.style.padding = "0";
+    this.dom.firstChild.style.width = "100%";
+    this.dom.firstChild.style.height = "100%";
 
     this.color = "white";
     this.radius = 0;
-    this.css.borderWidth ='0px';
-    this.css.borderStyle = 'solid';
-    this.css.borderColor = 'black';
+    this.dom.firstChild.style.borderWidth ='0px';
+    this.dom.firstChild.style.borderStyle = 'solid';
+    this.dom.firstChild.style.borderColor = 'black';
   }
 });
